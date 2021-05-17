@@ -61,7 +61,7 @@ class server{
 	public function getAuthBasica(){
 		//autprization basica
 		$rsl['user']		=$_SERVER['PHP_AUTH_USER'];
-		$rsl['password']	$_SERVER['PHP_AUTH_PW'];
+		$rsl['password']	=$_SERVER['PHP_AUTH_PW'];
 		
 		return $rsl;
 	}
