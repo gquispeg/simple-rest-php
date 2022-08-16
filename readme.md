@@ -1,0 +1,1 @@
+TODO: Depurar FuncionesGet, las funciones que no tienen static en la función
