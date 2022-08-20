@@ -5,6 +5,6 @@
     require_once 'Api/SimpleRestPHP/App.php';
 	
     $api = New SimpleRestPHP\App();
-    $api->use('/simple-rest-php/', require_once 'Routes/AsistenciaRoute.php');
+    $api->use('/', require_once 'Routes/AsistenciaRoute.php');
     $api->run();
 ?>

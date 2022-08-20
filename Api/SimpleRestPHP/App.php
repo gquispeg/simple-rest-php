@@ -11,10 +11,15 @@
         private $permitidos = array();
         private $headers = HEADERS;
 
+        function __construct(){
+            $this->rutaBase = "/".explode("/", $_SERVER["REQUEST_URI"])[1]."/";
+        }
         //Ruta base
         private $rutaBase;
         public function Use($ruta, $importar){
-            $this->rutaBase = $ruta;
+            if($ruta != "/"){
+                $this->rutaBase = $ruta;
+            }
         }
 
         //Funciones SET
