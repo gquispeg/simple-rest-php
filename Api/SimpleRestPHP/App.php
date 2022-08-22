@@ -8,78 +8,84 @@
         public $status = STATUS;
         public $body = '';
 
-        private $permitidos = array();
+        private $permitidos = METODOS_PERMITIDOS;
         private $headers = HEADERS;
 
-        function __construct(){
-            $this->rutaBase = "/".explode("/", $_SERVER["REQUEST_URI"])[1]."/";
-        }
-        //Ruta base
-        private $rutaBase;
+        private $listaRutas = array();
         public function Use($ruta, $importar){
-            if($ruta != "/"){
-                $this->rutaBase = $ruta;
+            if(array_key_exists($ruta, $this->listaRutas)){
+                Utils::Respuesta(500, False, "Ruta principal ".$ruta." se encuentra repetida");
             }
+            $this->listaRutas = array($ruta => $importar);
         }
 
         //Funciones SET
-        public function SetPermitidos($permitidos=array('GET')){
-            $this->permitidos = $permitidos;
-        }
         public function SetHeaders($header){
             $this->header = $header;
         }
 
         //Funciones HTTP
         private $funcionesAPI=[];
+        //private $claseActual;
+        private function LimpiarMetodo($funcion){
+            $funcion = explode(":", $funcion);
+            if(count($funcion) == 1){
+                return $funcion[0];
+            }
+            
+            return $funcion[0].":";
+        }
         public function GET($ruta, $funcion){
-            $nuevo = array(
-                "tipo"=>"GET",
-                "ruta"=>$ruta,
-                "funcion"=>$funcion
-            );
-            array_push($this->funcionesAPI, $nuevo);
+            $ruta = $this->LimpiarMetodo($ruta);
+            $this->funcionesAPI["GET"][$ruta] = $funcion;
         }
         public function POST($ruta, $funcion){
-            $nuevo = array(
-                "tipo"=>"POST",
-                "ruta"=>$ruta,
-                "funcion"=>$funcion
-            );
-            array_push($this->funcionesAPI, $nuevo);
+            $ruta = $this->LimpiarMetodo($ruta);
+            $this->funcionesAPI["POST"][$ruta] = $funcion;
         }
         public function PATCH($ruta, $funcion){
-            $nuevo = array(
-                "tipo"=>"PATCH",
-                "ruta"=>$ruta,
-                "funcion"=>$funcion
-            );
-            array_push($this->funcionesAPI, $nuevo);
+            $ruta = $this->LimpiarMetodo($ruta);
+            $this->funcionesAPI["PATCH"][$ruta] = $funcion;
         }
         public function DELETE($ruta, $funcion){
-            $nuevo = array(
-                "tipo"=>"DELETE",
-                "ruta"=>$ruta,
-                "funcion"=>$funcion
-            );
-            array_push($this->funcionesAPI, $nuevo);
+            $ruta = $this->LimpiarMetodo($ruta);
+            $this->funcionesAPI["DELETE"][$ruta] = $funcion;
         }
         
         //Ejecución del API
         public Function run(){
             Utils::ValidarToken();
-            
-            $funcion = Utils::ObtenerRuta($this->rutaBase, $this->funcionesAPI);
-            if(function_exists($funcion)){
-                http_response_code($this->status);
-                foreach($this->headers as $cadena){
-                    header($cadena);
+            $this->ImportarArchivoRuta();
+            $this->EjecutarFuncion();
+           
+        }
+       
+        private function ImportarArchivoRuta(){
+            $clase = Utils::ObtenerClase();
+            if(array_key_exists($clase, $this->listaRutas)){
+                foreach (METODOS_PERMITIDOS as $metodo) {
+                    $this->funcionesAPI[$metodo] = array();
                 }
-                call_user_func($funcion, FuncionesGet::GetId());
-                die();
+                require_once $this->listaRutas[$clase];
             }else{
-                http_response_code(500);
-                Utils::Respuesta(False, 'Función o método no existe');
+                Utils::Respuesta(500, False, 'Ruta no existe');
+            }
+        }
+
+        private function EjecutarFuncion(){
+            $metodo = $_SERVER['REQUEST_METHOD'];
+            $funcion = Utils::ObtenerRutaActual();
+            
+            if(array_key_exists($funcion, $this->funcionesAPI[$metodo])){
+                $funcion = $this->funcionesAPI[$metodo][$funcion];
+            }else{
+                Utils::Respuesta(500, False, 'Ruta no existe');
+            }
+
+            if(function_exists($funcion)){
+                call_user_func($funcion);
+            }else{
+                Utils::Respuesta(500, False, 'Función o método no existe');
             }
         }
     }

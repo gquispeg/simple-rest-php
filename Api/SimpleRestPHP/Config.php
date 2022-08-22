@@ -5,7 +5,7 @@
     )
             );
     define("TOKEN","");
-    define("HTTP_METODO", array(
+    define("METODOS_PERMITIDOS", array(
         'GET',
         'POST',
         'PATCH',
