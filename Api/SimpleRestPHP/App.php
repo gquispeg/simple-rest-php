@@ -9,19 +9,12 @@
         public $body = '';
 
         private $permitidos = METODOS_PERMITIDOS;
-        private $headers = HEADERS;
-
         private $listaRutas = array();
         public function Use($ruta, $importar){
             if(array_key_exists($ruta, $this->listaRutas)){
                 Utils::Respuesta(500, False, "Ruta principal ".$ruta." se encuentra repetida");
             }
             $this->listaRutas[$ruta] = $importar;
-        }
-
-        //Funciones SET
-        public function SetHeaders($header){
-            $this->header = $header;
         }
 
         //Funciones HTTP

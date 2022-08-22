@@ -10,6 +10,9 @@
             if(count($data) > 0){
                 $rslt['data'] = $data;
             }
+            foreach(HEADERS as $header){
+                header($header);
+            }
             http_response_code($response);
             echo json_encode($rslt, JSON_UNESCAPED_UNICODE);
             die();
