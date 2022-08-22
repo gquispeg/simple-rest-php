@@ -2,7 +2,6 @@
     namespace SimpleRestPHP;
     
     Class Utils{
-        public $utilida;
         static function Respuesta($response, $success, $message, $data=[]){
             $rslt=array(
                 "success"=>$success,
@@ -39,6 +38,10 @@
             //Obteniendo la clase
             $rutaActual = explode("/", $rutaActual);
             $rutaActual = $rutaActual[0];
+
+            if(strlen($rutaActual) == 0){
+                return "/";
+            }
             return $rutaActual;
         }
 
@@ -62,6 +65,10 @@
             $cLimpiar = strlen(Utils::ObtenerRutaBase());
             $rutaActual = substr($rutaActual, $cLimpiar);
             //Verificando que no se trate de una ruta ID
+            if(strlen($rutaActual) == 0){
+                return "/";
+            }
+
             if(substr($rutaActual, -1) != '/'){
                 $tmp = explode('/', $rutaActual);
                 $rutaActual = substr($rutaActual,0, strlen($rutaActual) - strlen($tmp[count($tmp)-1]));

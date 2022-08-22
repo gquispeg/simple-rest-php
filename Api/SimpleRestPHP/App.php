@@ -16,7 +16,7 @@
             if(array_key_exists($ruta, $this->listaRutas)){
                 Utils::Respuesta(500, False, "Ruta principal ".$ruta." se encuentra repetida");
             }
-            $this->listaRutas = array($ruta => $importar);
+            $this->listaRutas[$ruta] = $importar;
         }
 
         //Funciones SET
