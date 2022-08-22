@@ -1,9 +1,9 @@
 <?php
     require_once('Controllers/AsistenciaController.php');
 
-    $api->GET('/', 'Principal');
-    $api->GET('/asistencia/', 'ObtenerTodos');
-    $api->GET('/asistencia/:id', 'ObtenerEspecifico');
-    $api->POST('/asistencia/:id', 'MarcarAsistencia');
-    $api->DELETE('/asistencia/', 'EliminarLog');
+    $this->GET('/', 'Principal');
+    $this->GET('asistencia/', 'ObtenerTodos');
+    $this->GET('asistencia/#', 'ObtenerEspecifico');
+    $this->POST('asistencia/#', 'MarcarAsistencia');
+    $this->DELETE('asistencia/', 'EliminarLog');
 ?>

@@ -1,21 +1,20 @@
 <?php
-use SimpleRestPHP as rest;
+    use SimpleRestPHP\Utils;
     function Principal(){
-        echo "Api corriendo OK";
+        Utils::Respuesta(200, True, "corriendo principal ".Utils::ObtenerCodigo());
     }
-    function MarcarAsistencia($id){
-        echo "Marcar ".$id;
+    function MarcarAsistencia(){
+        Utils::Respuesta(200, True, "corriendo marcar ".Utils::ObtenerCodigo());
     }
     
-    function ObtenerEspecifico($id){
-        echo rest\FuncionesGet::GetBody();
-        //echo "Ejecutando especifico ".$id;
+    function ObtenerEspecifico(){
+        Utils::Respuesta(200, True, "corriendo obtener todos".rest\FuncionesGet::GetBody());
     }
     function ObtenerTodos(){
-        echo "Ejecutando Todos";
+        Utils::Respuesta(200, True, "corriendo obtener todos");
     }
     
     function EliminarLog(){
-        echo "Ejecutando eliminacion";
+        Utils::Respuesta(200, True, "corriendo eliminacion log");
     }
 ?>
