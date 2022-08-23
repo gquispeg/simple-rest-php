@@ -48,9 +48,9 @@
         //Ejecución del API
         public Function run(){
             Utils::ValidarToken();
-            $this->ImportarArchivoRuta();
-            $this->EjecutarFuncion();
-           
+            $clase = $this->ImportarArchivoRuta();
+            $clase = $this->EjecutarClase($clase);
+            $this->EjecutarFuncion($clase);
         }
        
         private function ImportarArchivoRuta(){
@@ -59,13 +59,21 @@
                 foreach (METODOS_PERMITIDOS as $metodo) {
                     $this->funcionesAPI[$metodo] = array();
                 }
-                require_once $this->listaRutas[$clase];
-            }else{
-                Utils::Respuesta(500, False, 'Ruta no existe');
+                return $clase;
             }
+            Utils::Respuesta(500, False, 'Ruta no existe');
         }
 
-        private function EjecutarFuncion(){
+        private function EjecutarClase($clase){
+            require_once $this->listaRutas[$clase];
+            $clase = ucwords($clase)."Controller";
+            if(class_exists($clase)){
+                return new $clase;
+            }else{
+                Utils::Respuesta(500, False, 'Clase no existe');
+            }
+        }
+        private function EjecutarFuncion($clase){
             $metodo = $_SERVER['REQUEST_METHOD'];
             $funcion = Utils::ObtenerRutaActual();
             
@@ -75,8 +83,9 @@
                 Utils::Respuesta(500, False, 'Ruta no existe');
             }
 
-            if(function_exists($funcion)){
-                call_user_func($funcion);
+            if(function_exists($clase->$funcion())){
+                call_user_func($clase->$funcion);
+                die();
             }else{
                 Utils::Respuesta(500, False, 'Función o método no existe');
             }
