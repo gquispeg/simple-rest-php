@@ -54,6 +54,9 @@
             }
             return "";
         }
+        static function ObtenerBody(){
+            return json_decode(file_get_contents("php://input"));
+        }
         static function ObtenerRutaCompleta(){ //Ruta completa, limpiando la base, limpiando parametros
             $rutaActual = $_SERVER['REQUEST_URI'];
             $cLimpiar = strlen(Utils::ObtenerRutaBase());
